@@ -10,22 +10,6 @@ namespace MilleniumTask.Services
     {
         public record CardDetails(string CardNumber, CardType CardType, CardStatus CardStatus, bool IsPinSet);
         private readonly Dictionary<string, Dictionary<string, CardDetails>> _userCards = CreateSampleUserCards();
-        private readonly Dictionary<string, CardActionPermissionDetails> _allowedActionsForCard = new()
-        {
-            { "ACTION1", new CardActionPermissionDetails([CardStatus.Active]) },
-            { "ACTION2", new CardActionPermissionDetails([CardStatus.Inactive]) },
-            { "ACTION3", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Restricted, CardStatus.Blocked, CardStatus.Expired, CardStatus.Closed]) },
-            { "ACTION4", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Restricted, CardStatus.Blocked, CardStatus.Expired, CardStatus.Closed]) },
-            { "ACTION5", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Restricted, CardStatus.Blocked, CardStatus.Expired, CardStatus.Closed], [CardType.Credit], isForCredit: true, isForDebit: false, isForPrepaid: false) },
-            { "ACTION6", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Blocked], isSetPinNeeded: true) },
-            { "ACTION7", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Blocked], isSetPinNeeded: true) },
-            { "ACTION8", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Blocked]) },
-            { "ACTION9", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active, CardStatus.Restricted, CardStatus.Blocked, CardStatus.Expired, CardStatus.Closed]) },
-            { "ACTION10", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active]) },
-            { "ACTION11", new CardActionPermissionDetails([CardStatus.Inactive, CardStatus.Active]) },
-            { "ACTION12", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active]) },
-            { "ACTION13", new CardActionPermissionDetails([CardStatus.Ordered, CardStatus.Inactive, CardStatus.Active]) }
-        };
 
         public async Task<CardDetails?> GetCardDetails(string userId, string cardNumber)
         {
@@ -39,6 +23,7 @@ namespace MilleniumTask.Services
             }
             return cardDetails;
         }
+
         private static Dictionary<string, Dictionary<string, CardDetails>> CreateSampleUserCards()
         {
             var userCards = new Dictionary<string, Dictionary<string, CardDetails>>();
@@ -66,36 +51,9 @@ namespace MilleniumTask.Services
             return userCards;
         }
 
-        public async Task<string[]> GetAllowedActionsForCard(string userId, string cardNumber, CancellationToken token)
+        public Dictionary<string, Dictionary<string, CardDetails>> GetCardsDetails()
         {
-            if (userId is null || cardNumber is null)
-            {
-                return Array.Empty<string>();
-            }
-
-            var data = await GetCardDetails(userId, cardNumber);
-            if (data == null)
-            {
-                return Array.Empty<string>();
-            }
-
-            var card = _userCards.Values.Where(y => y.ContainsKey(cardNumber))
-                                        .Select(y => y).FirstOrDefault();
-
-            var cardDetails = card != null && card.TryGetValue(cardNumber, out var details) ? details : null;
-
-            if (cardDetails == null)
-            {
-                return Array.Empty<string>();
-            }
-
-            return _allowedActionsForCard
-                .Where(y => y.Value.SupportedStatuses.Contains(cardDetails.CardStatus) &&
-                            y.Value.SupportedCardTypes.Contains(cardDetails.CardType))
-                .Select(y => y.Value.IsSetPinNeeded
-                    ? y.Key + " (jeżeli nadany PIN)"
-                    : y.Key)
-                .ToArray();
+            return CreateSampleUserCards(); 
         }
     }
 }

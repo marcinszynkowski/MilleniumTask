@@ -8,51 +8,25 @@ namespace MilleniumTask.Models
 
         public CardType[] SupportedCardTypes { get; set; } = (CardType[])Enum.GetValues(typeof(CardType));
 
-        public bool IsForCredit { get; set; }
+        public CardStatus[] CardStatusesRequiringPin { get; set; }
 
-        public bool IsForDebit { get; set; }
+        public CardStatus[] CardStatusesRequiringEmptyPin { get; set; }
 
-        public bool IsForPrepaid { get; set; }
-
-        public bool IsSetPinNeeded { get; set; }
-
-        public CardActionPermissionDetails(CardStatus[] supportedStatuses, CardType[] supportedCardTypes, bool isForCredit, bool isForDebit, bool isForPrepaid, bool isSetPinNeeded)
-        {
-            SupportedStatuses = supportedStatuses;
-            IsForCredit = isForCredit;
-            IsForDebit = isForDebit;
-            IsForPrepaid = isForPrepaid;
-            IsSetPinNeeded = isSetPinNeeded;
-            SupportedCardTypes = supportedCardTypes ?? (CardType[])Enum.GetValues(typeof(CardType));
-        }
+        public CardStatus[] CardStatusesRequiringPinSet { get; set; }
 
         public CardActionPermissionDetails(CardStatus[] supportedStatuses)
         {
             SupportedStatuses = supportedStatuses;
-            IsForCredit = false;
-            IsForDebit = false;
-            IsForPrepaid = false;
-            IsSetPinNeeded = false;
         }
 
 
-        public CardActionPermissionDetails(CardStatus[] supportedStatuses, CardType[] supportedCardTypes, bool isForCredit, bool isForDebit, bool isForPrepaid)
+        public CardActionPermissionDetails(CardStatus[] supportedStatuses, CardType[]? supportedCardTypes = null, CardStatus[]? cardStatusesRequiringPin = null, CardStatus[]? cardStatusesRequiringEmptyPin = null, CardStatus[]? cardStatusesRequiringPinSet = null)
         {
             SupportedStatuses = supportedStatuses;
-            IsForCredit = isForCredit;
-            IsForDebit = isForDebit;
-            IsForPrepaid = isForPrepaid;
-            IsSetPinNeeded = false;
             SupportedCardTypes = supportedCardTypes ?? (CardType[])Enum.GetValues(typeof(CardType));
-        }
-
-        public CardActionPermissionDetails(CardStatus[] supportedStatuses, bool isSetPinNeeded)
-        {
-            SupportedStatuses = supportedStatuses;
-            IsForCredit = false;
-            IsForDebit = false;
-            IsForPrepaid = false;
-            IsSetPinNeeded = isSetPinNeeded;
+            CardStatusesRequiringPin = cardStatusesRequiringPin;
+            CardStatusesRequiringEmptyPin = cardStatusesRequiringEmptyPin;
+            CardStatusesRequiringPinSet = cardStatusesRequiringPinSet;
         }
     }
 }

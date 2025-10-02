@@ -4,8 +4,8 @@ namespace MilleniumTask.Interfaces
 {
     public interface ICardService
     {
-        Task<string[]> GetAllowedActionsForCard(string userId, string cardNumber, CancellationToken token);
-
         Task<CardDetails?> GetCardDetails(string userId, string cardNumber);
+
+        Dictionary<string, Dictionary<string, CardDetails>> GetCardsDetails();
     }
 }

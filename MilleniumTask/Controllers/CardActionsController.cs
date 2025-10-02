@@ -8,9 +8,9 @@ namespace MilleniumTask.Controllers
     [Route("[action]")]
     public class CardActionsController : ControllerBase
     {
-        private readonly ICardService _cardService;
+        private readonly ICardQueryService _cardService;
 
-        public CardActionsController(ICardService cardService)
+        public CardActionsController(ICardQueryService cardService)
         {
             _cardService = cardService;
         }
