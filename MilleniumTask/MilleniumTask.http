@@ -1,0 +1,6 @@
+@MilleniumTask_HostAddress = http://localhost:5268
+
+GET {{MilleniumTask_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
